@@ -4,6 +4,8 @@ const { isBlacklisted } = require("../utils/blacklist");
 const stringSimilarity = require('string-similarity');
 const fs = require("fs");
 const path = require("path");
+const { renderTemplate } = require("../utils/commands");
+
 
 function getMsgType(msg) {
   if (msg.message?.conversation) return "text";
@@ -12,6 +14,7 @@ function getMsgType(msg) {
   if (msg.message?.videoMessage) return "video";
   if (msg.message?.stickerMessage) return "sticker";
   if (msg.message?.documentMessage) return "document";
+  if (msg.message?.extendedTextMessage) return "tag";
   return Object.keys(msg.message)[0] || "unknown";
 }
 
@@ -25,7 +28,7 @@ fs.readdirSync(path.join(__dirname, "commands")).forEach(file => {
 async function handleMessage(sock, msg) {
   const from = msg.key.remoteJid;
   const isGroup = from.endsWith("@g.us");
-  let chatType = getMsgType(msg);
+  let chatType = getMsgType(msg).toLowerCase();
   let chatText = chatType === "text" ? msg.message.conversation : `[${chatType.toUpperCase()} MESSAGE]`;
 
   // Cek blacklist
@@ -40,7 +43,7 @@ async function handleMessage(sock, msg) {
   if (chatType === "text") {
     const text = msg.message.conversation.trim().toLowerCase();
 
-    // Blacklist manual
+    // Blacklist command tetap manual
     if (text.startsWith("!blacklist")) {
       const commandArg = text.split(" ")[1] || from.replace("@s.whatsapp.net", "");
       await commands.blacklist(sock, msg, { from, isGroup, commandArg });
@@ -48,25 +51,49 @@ async function handleMessage(sock, msg) {
       return;
     }
 
-    // --- Fuzzy matching dari string-similarity
-    const triggers = commandList.map(cmd => cmd.trigger.toLowerCase());
-    const { bestMatch } = stringSimilarity.findBestMatch(text, triggers);
+    // ===== Hybrid Array Fuzzy Matching =====
+    // Gabungkan semua trigger jadi satu array triggerItems
+    const triggerItems = [];
+    commandList.forEach(cmd => {
+      if (Array.isArray(cmd.trigger)) {
+        cmd.trigger.forEach(tr => triggerItems.push({ trigger: tr.toLowerCase(), cmd }));
+      } else {
+        triggerItems.push({ trigger: cmd.trigger.toLowerCase(), cmd });
+      }
+    });
+
+    // Cek best match untuk semua trigger
+    const triggersOnly = triggerItems.map(x => x.trigger);
+    const { bestMatch } = stringSimilarity.findBestMatch(text, triggersOnly);
 
     if (bestMatch.rating > 0.65) {
-      const found = commandList.find(cmd => cmd.trigger.toLowerCase() === bestMatch.target);
-      let reply = found.response;
-      if (reply.includes("{{time}}")) {
-        reply = reply.replace("{{time}}", new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }));
-      }
+      const found = triggerItems.find(x => x.trigger === bestMatch.target).cmd;
+      // Ganti semua template sekalian
+      let replyArray = Array.isArray(found.response) ? found.response[Math.floor(Math.random() * found.response.length)] : found.response;
+      let reply = renderTemplate(replyArray, { sapaan: bestMatch.target });
+
       await sock.sendMessage(from, { text: reply });
-      logChatProcess({ from, text: `[REPLY ${found.trigger.toUpperCase()}]`, status: "SELESAI" });
+      logChatProcess({ from, text: `[REPLY ${bestMatch.target.toUpperCase()}]`, status: "SELESAI" });
       return;
     }
   }
 
+
   // --- Jika bukan teks, info jenis pesan
-  if (chatType !== "text") {
-    // await sock.sendMessage(from, { text: `Kamu kirim pesan jenis: ${chatType}` });
+  if (chatType == "tag" || chatType == "image" || chatType == "video") {
+    const text =
+      (msg.message.extendedTextMessage?.text ||
+        msg.message.imageMessage?.caption ||
+        msg.message.videoMessage?.caption ||
+        "").trim().toLowerCase();
+
+    if (text.startsWith("!stiker")) {
+      // Cek reply gambar
+      let proses = await commands.stiker(sock, msg, { from });
+      return logChatProcess({ from, text: `[TAG ${text}]`, status: proses });
+    }
+
+    // logChatProcess({ from, text: "[TAG", status: "SELESAI" });
   }
 
   logChatProcess({ from, text: chatText, status: "SELESAI" });

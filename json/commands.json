@@ -1,19 +1,44 @@
 [
   {
-    "trigger": "halo",
-    "response": "Halo juga! 👋"
+    "trigger": [
+      "halo",
+      "hai",
+      "pe",
+      "hy"
+    ],
+    "response": [
+      "{{sapaan}} juga",
+      "Hai, ada yang bisa dibantu?",
+      "Yoo, {{sapaan}}! iya ada apa?"
+    ]
   },
-  
   {
     "trigger": "assalamualaikum",
-    "response": "walaikumsalam"
+    "response": [
+      "walaikumsalam",
+      "walaikumsalam, ya ada apa?",
+      "walaikumsalam, ada yang bisa saya bantu?"
+    ]
   },
   {
     "trigger": "jam",
-    "response": "Sekarang jam: {{time}}"
+    "response": [
+      "Sekarang jam: {{time}}",
+      "Jam: {{time}}"
+    ]
   },
   {
-    "trigger": "!about",
-    "response": "Saya adalah bot warehouse Fatur, siap bantu 24/7! 🤖"
+    "trigger": "about",
+    "response": [
+      "Saya adalah bot buatan Fatur, siap bantu 24/7! 🤖",
+      "Halo! Aku asisten digitalnya Fatur. Ada masalah? Sikat aja!",
+      "Yes, I'm Fatur's. Siap jadi teman kerja lo setiap saat.",
+      "Aku bot andalan buatan Fatur, selalu on dan anti lemot!",
+      "Dipersembahkan oleh Fatur, aku bot yang siap kerja keras (dan kerja cerdas)!",
+      "Bot Fatur reporting for duty. Ngantuk? Enggak pernah! 🤓",
+      "Bot ini lahir dari racikan Fatur, buat bantu urusan warehouse atau sekadar nemenin ngopi 😏",
+      "Siapa aku? Aku bot made by Fatur—kalau error, tinggal colek Fatur aja ya!",
+      "Aku bot custom, Fatur yang bikin. Ada fitur baru? Tulis aja, siapa tau besok udah ada!"
+    ]
   }
 ]

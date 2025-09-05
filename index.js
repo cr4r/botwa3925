@@ -4,6 +4,9 @@ const pino = require("pino");
 const qrcode = require("qrcode-terminal");
 const { handleMessage } = require("./handler/message");
 
+const PQueue = require('p-queue').default;
+const queue = new PQueue({ concurrency: 1 });
+
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("auth_info_baileys");
 
@@ -33,14 +36,22 @@ async function startBot() {
     }
   });
 
-  sock.ev.on("messages.upsert", async ({ messages, type }) => {
-    if (type !== "notify") return;
-    const msg = messages[0];
+  sock.ev.on("messages.upsert", async (m, type) => {
+    // if (type !== "notify") return;
+    const msg = m.messages[0];
     if (!msg.message || !msg.key.remoteJid) return;
 
-    // Panggil handler modular
-    await handleMessage(sock, msg);
+    queue.add(async () => {
+      try {
+        await handleMessage(sock, m.messages[0]); // handler kamu
+      } catch (err) {
+        console.error("Error handling message:", err);
+      }
+    });
   });
+
+  // Tambahkan logging antrian queue
+  queue.on('add', () => console.log(`Queue length: ${queue.size}`));
 }
 
 startBot();
