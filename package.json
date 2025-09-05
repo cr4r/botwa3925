@@ -1,0 +1,22 @@
+{
+  "name": "botwa3925",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@adiwajshing/keyed-db": "^0.2.4",
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "^6.7.19",
+    "chalk": "^4.1.2",
+    "nodemon": "^3.1.10",
+    "pino": "^9.9.1",
+    "qrcode-terminal": "^0.12.0",
+    "string-similarity": "^4.0.4"
+  }
+}

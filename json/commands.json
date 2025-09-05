@@ -1,0 +1,19 @@
+[
+  {
+    "trigger": "halo",
+    "response": "Halo juga! 👋"
+  },
+  
+  {
+    "trigger": "assalamualaikum",
+    "response": "walaikumsalam"
+  },
+  {
+    "trigger": "jam",
+    "response": "Sekarang jam: {{time}}"
+  },
+  {
+    "trigger": "!about",
+    "response": "Saya adalah bot warehouse Fatur, siap bantu 24/7! 🤖"
+  }
+]
