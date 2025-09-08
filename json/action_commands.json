@@ -1,0 +1,19 @@
+{
+  "serverinfo": [
+    "serverinfo",
+    "status server",
+    "!server",
+    "!ping",
+    "ping",
+    "cek server"
+  ],
+  "slipgaji": [
+    "slip gaji"
+  ],
+  "stiker": [
+    "!stiker"
+  ],
+  "blacklist": [
+    "!blacklist"
+  ]
+}

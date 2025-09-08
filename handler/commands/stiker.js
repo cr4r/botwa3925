@@ -10,7 +10,7 @@ async function videoToAnimatedWebp(buffer) {
   const outputFile = path.join(__dirname, "../../temp/output-" + Date.now() + ".webp");
   fs.writeFileSync(inputFile, buffer);
   return new Promise((resolve, reject) => {
-    let durasiVideo = 10
+    let durasiVideo = 9
     ffmpeg(inputFile)
       .inputOptions(["-t", durasiVideo])
       .outputOptions([
@@ -111,10 +111,10 @@ module.exports = async (sock, msg, { from }) => {
     const stickerFinalBuffer = await sticker.toBuffer();
 
     // Kirim sebagai stiker
-    await sock.sendMessage(from, { sticker: isVideo ? stickerBuffer : stickerFinalBuffer });
+    await sock.sendMessage(from, { sticker: isVideo ? stickerBuffer : stickerFinalBuffer }, { quoted: msg });
     return "Selesai"
   } catch (e) {
-    await sock.sendMessage(from, { text: "Gagal proses stiker: " + e.message });
+    await sock.sendMessage(from, { text: "Gagal proses stiker: " + e.message }, { quoted: msg });
     return "Gagal"
   }
 };
