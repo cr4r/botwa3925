@@ -2,8 +2,8 @@
   "serverinfo": [
     "serverinfo",
     "status server",
-    "!server",
-    "!ping",
+    ".server",
+    ".ping",
     "ping",
     "cek server"
   ],
@@ -11,9 +11,28 @@
     "slip gaji"
   ],
   "stiker": [
-    "!stiker"
+    ".stiker"
   ],
   "blacklist": [
-    "!blacklist"
+    ".blacklist"
+  ],
+  "youtube": [
+    "yt",
+    ".yt",
+    "youtube",
+    "ytvideo",
+    ".youtube",
+    "ytmusik",
+    "ytmusic"
+  ],
+  "karyawan_update": [
+    "data lbs update",
+    ".data lbs update",
+    "!data lbs update"
+  ],
+  "karyawan": [
+    "data lbs",
+    ".data lbs",
+    "!data lbs"
   ]
 }

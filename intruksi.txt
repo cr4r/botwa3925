@@ -1,1 +1,5 @@
-npm install @whiskeysockets/baileys @adiwajshing/keyed-db pino qrcode-terminal chalk @hapi/boom
+npm install @whiskeysockets/baileys @adiwajshing/keyed-db pino qrcode-terminal chalk @hapi/boom string-similarity sharp
+npm install -g pm2 chalk@4 
+
+sudo apt install -y ffmpeg yt-dlp
+npm install -g @tobyg74/tiktok-api-dl

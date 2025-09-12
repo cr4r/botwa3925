@@ -7,6 +7,7 @@ fs.readdirSync(path.join(__dirname, "commands")).forEach(file => {
   const cmdName = file.replace(".js", "");
   commands[cmdName] = require(`./commands/${file}`);
 });
+
 const commandList = require("../json/commands.json");
 const actionCommandList = require("../json/action_commands.json");
 const stringSimilarity = require('string-similarity');
@@ -18,27 +19,36 @@ async function parseCommand(sock, msg, { from, chatType }) {
     msg.message?.conversation ||
     msg.message?.extendedTextMessage?.text ||
     msg.message?.imageMessage?.caption ||
+    msg.message?.documentWithCaptionMessage?.caption ||
     msg.message?.videoMessage?.caption ||
+    msg.message?.documentWithCaptionMessage?.message?.documentMessage?.caption ||
     ""
   ).trim().toLowerCase();
 
-  // --- COMMAND MANUAL ---
-  // if (text.startsWith("!blacklist")) {
-  //   const commandArg = text.split(" ")[1] || from.replace("@s.whatsapp.net", "");
-  //   await commands.blacklist(sock, msg, { from, isGroup: from.endsWith("@g.us"), commandArg });
-  //   return true;
-  // }
-
-  // if (text.startsWith("slip gaji")) {
-  //   await commands.slipgaji(sock, msg, { from });
-  //   return true;
-  // }
-
   // ==== Modular Action Commands ====
   for (let [cmd, aliases] of Object.entries(actionCommandList)) {
+
     // Cek apakah text diawali salah satu alias (case-insensitive)
     if (aliases.some(alias => text.startsWith(alias))) {
-      await commands[cmd](sock, msg, { from }); // Panggil function di /commands/
+      let extraParams = {};
+
+      // khusus Youtube
+      if (cmd == "youtube") {
+        // Khusus ytvideo: ambil url & info
+        let parts = text.split(" ");
+        extraParams.url = parts[1] || (
+          msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.conversation?.trim()
+        );
+        extraParams.info = parts[2] === "info" || false;
+      }
+
+      if (cmd == "karyawan") {
+        namanya = text.split(" ").slice(2).join(" ");
+        extraParams.nama = namanya
+      }
+
+
+      await commands[cmd](sock, msg, { from, ...extraParams }); // Panggil function di /commands/
       return true;
     }
   }
@@ -60,7 +70,7 @@ async function parseCommand(sock, msg, { from, chatType }) {
       : fuzzyResult.matchedCommand.response;
 
     let reply = renderTemplate(replyArray, { sapaan: fuzzyResult.bestMatch.target });
-    await sock.sendMessage(from, { text: reply });
+    await sock.sendMessage(from, { text: reply }, { quoted: msg });
     return true;
   }
 
