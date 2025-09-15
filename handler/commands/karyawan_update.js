@@ -2,7 +2,7 @@ const XLSX = require("xlsx");
 const path = require("path");
 const fs = require("fs");
 const { excelDateToJSDate } = require("../../utils/date_excel")
-const { cek_staff_admin } = require("../../utils/cek_akses");
+const { cek_akses_staff_admin } = require("../../utils/cek_akses");
 const { downloadMediaMessage } = require("@whiskeysockets/baileys");
 
 const tempFile = path.join(__dirname, "../../temp/database_karyawan.xlsx");
@@ -62,7 +62,7 @@ const updateDataLbs = (exelPath) => {
 
 module.exports = async (sock, msg, { from }) => {
   // Ambil nomor sender
-  let cek_akses = cek_staff_admin(msg);
+  let cek_akses = cek_akses_staff_admin(msg);
   if (!cek_akses.status) {
     await sock.sendMessage(from, {
       text: cek_akses.message,

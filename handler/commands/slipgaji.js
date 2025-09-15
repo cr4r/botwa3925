@@ -6,7 +6,6 @@ const SLIP_DIR = path.join(__dirname, '../../slip_gaji');
 module.exports = async (sock, msg, { from }) => {
   try {
     // KHUSUS CHAT PRIBADI!!!
-    console.log(from)
     if (!from.endsWith('@s.whatsapp.net')) {
       return;
     }

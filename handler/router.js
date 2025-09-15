@@ -27,10 +27,10 @@ async function parseCommand(sock, msg, { from, chatType }) {
 
   // ==== Modular Action Commands ====
   for (let [cmd, aliases] of Object.entries(actionCommandList)) {
-
     // Cek apakah text diawali salah satu alias (case-insensitive)
     if (aliases.some(alias => text.startsWith(alias))) {
       let extraParams = {};
+      extraParams.text = text;
 
       // khusus Youtube
       if (cmd == "youtube") {
@@ -42,17 +42,10 @@ async function parseCommand(sock, msg, { from, chatType }) {
         extraParams.info = parts[2] === "info" || false;
       }
 
-      if (cmd == "karyawan") {
-        namanya = text.split(" ").slice(2).join(" ");
-        extraParams.nama = namanya
-      }
-
-
       await commands[cmd](sock, msg, { from, ...extraParams }); // Panggil function di /commands/
       return true;
     }
   }
-
   // --- COMMAND JSON (fuzzy match) ---
   const triggerItems = [];
   commandList.forEach(cmd => {

@@ -2,11 +2,12 @@ const fs = require("fs");
 const path = require("path");
 
 const JSON_PATH = path.join(__dirname, "../../database/karyawan.json");
-const { cek_staff_admin } = require("../../utils/cek_akses");
+const { cek_akses_staff_admin } = require("../../utils/cek_akses");
 
-module.exports = async (sock, msg, { from, nama }) => {
+module.exports = async (sock, msg, { from, text }) => {
+  let nama = text.split(" ").slice(2).join(" ");
   // Cek apakah sender termasuk admin
-  let cek_akses = cek_staff_admin(msg);
+  let cek_akses = cek_akses_staff_admin(msg);
   if (!cek_akses.status) {
     await sock.sendMessage(from, {
       text: cek_akses.message,

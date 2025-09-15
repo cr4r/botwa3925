@@ -11,6 +11,7 @@
     "slip gaji"
   ],
   "stiker": [
+    "!stiker",
     ".stiker"
   ],
   "blacklist": [
@@ -34,5 +35,13 @@
     "data lbs",
     ".data lbs",
     "!data lbs"
+  ],
+  "group_manage": [
+    "tambah",
+    "add",
+    "kick",
+    "keluarkan",
+    "hapus",
+    "remove"
   ]
 }

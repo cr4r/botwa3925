@@ -8,7 +8,7 @@ async function handleMessage(sock, msg) {
   const from = msg.key.remoteJid;
   const isGroup = from.endsWith("@g.us");
   let chatType = getMsgType(msg);
-  let chatText = chatType === "text" ? msg.message.conversation : `[${chatType.toUpperCase()} MESSAGE]`;
+  let chatText = chatType === "text" ? msg.message.conversation : `[${chatType} MESSAGE]`;
 
   // Blacklist check
   if (isBlacklisted(from, isGroup ? "group" : "number")) {
