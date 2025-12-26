@@ -28,7 +28,7 @@
     "sharp": "^0.34.3",
     "string-similarity": "^4.0.4",
     "tmp-promise": "^3.0.3",
-    "wa-sticker-formatter": "^1.6.0",
+    "wa-sticker-formatter": "^4.4.4",
     "xlsx": "^0.18.5",
     "youtube-dl": "^3.4.1",
     "ytdl-core": "^4.11.5"
